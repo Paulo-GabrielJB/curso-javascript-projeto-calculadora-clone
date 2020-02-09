@@ -29,19 +29,19 @@ class CalcController {
         });
     }
 
-    toggleAudio(){
+    toggleAudio() {
         this._audioOnOff = !this._audioOnOff;
     }
 
 
-    playAudio(){
-        if(this._audioOnOff){
+    playAudio() {
+        if (this._audioOnOff) {
             this._audio.currentTime = 0;
             this._audio.play();
         }
     }
 
-    copyToClipboard(){
+    copyToClipboard() {
         let input = document.createElement("input"); //cria um elemento
         input.value = this.displayCalc;
         document.body.appendChild(input); //adiciona o elemento criado ao body
@@ -50,16 +50,16 @@ class CalcController {
         input.remove();
     }
 
-    pasteFromClipboard(){
+    pasteFromClipboard() {
         document.addEventListener("paste", e => {
-            let txt =  e.clipboardData.getData("Text");
+            let txt = e.clipboardData.getData("Text");
             this.displayCalc = isNaN(txt) ? 0 : txt;
         })
     }
 
     initiKeyBoard() {
         document.addEventListener("keyup", e => {
-           this.playAudio();
+            this.playAudio();
             switch (e.key) {
                 case "Escape":
                     this.clearAll()
@@ -95,7 +95,7 @@ class CalcController {
                     this.addOperation(e.key);
                     break;
                 case "c":
-                    if(e.ctrlKey)
+                    if (e.ctrlKey)
                         this.copyToClipboard();
                     break;
             }
@@ -333,6 +333,10 @@ class CalcController {
     }
 
     set displayCalc(value) { //set para identificar que é um seter, quando for chamado sera reconhecido como um "atributo"
+        if (value.toString().length > 10) {
+            this.setError();
+            return 0;
+        }
         this._displayCalcEl.innerHTML = value;
     }
 
