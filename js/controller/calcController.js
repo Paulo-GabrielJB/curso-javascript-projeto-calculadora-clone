@@ -18,6 +18,23 @@ class CalcController {
         this.initButtonsEvents();
         this.setLastNumberToDisplay();
         this.initiKeyBoard();
+        this.pasteFromClipboard();
+    }
+
+    copyToClipboard(){
+        let input = document.createElement("input"); //cria um elemento
+        input.value = this.displayCalc;
+        document.body.appendChild(input); //adiciona o elemento criado ao body
+        input.select(); //seleciona o input
+        document.execCommand("Copy"); //copia tudo oq esta selecionado
+        input.remove();
+    }
+
+    pasteFromClipboard(){
+        document.addEventListener("paste", e => {
+            let txt =  e.clipboardData.getData("Text");
+            this.displayCalc = isNaN(txt) ? 0 : txt;
+        })
     }
 
     initiKeyBoard() {
@@ -55,6 +72,10 @@ class CalcController {
                 case "8":
                 case "9":
                     this.addOperation(e.key);
+                    break;
+                case "c":
+                    if(e.ctrlKey)
+                        this.copyToClipboard();
                     break;
             }
         });
@@ -161,20 +182,20 @@ class CalcController {
     }
 
     addOperation(value) {
-        if (isNaN(this.getLastOperation()))
-            if (this.isOperator(value))
-                this.setLastOperation(value);
+        if (isNaN(this.getLastOperation())) //verifica se a ultima operacao não é um numero
+            if (this.isOperator(value)) //se não for ele verifica se a operação é um operador
+                this.setLastOperation(value); //se for um operador ela troca o operador
 
-            else {
+            else { //caso a ultima operação for undefined, neste caso para o primeiro numero é adicionado o proprio valor
                 this.pushOperation(value);
                 this.setLastNumberToDisplay();
             }
         else
-            if (this.isOperator(value))
+            if (this.isOperator(value)) //caso a ultima operação seja um numero e for um operador adiciona o operador
                 this.pushOperation(value);
-            else {
-                let newValue = this.getLastOperation().toString() + value.toString();
-                this.setLastOperation(newValue);
+            else { //se não
+                let newValue = this.getLastOperation().toString() + value.toString(); //transforma o numero em string e concatena com o valor
+                this.setLastOperation(newValue); //adiciona o novo valor
                 this.setLastNumberToDisplay();
             }
     }
