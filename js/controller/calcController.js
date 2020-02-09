@@ -69,9 +69,9 @@ class CalcController {
             if (this.isOperator(value))
                 this.setLastOperation(value);
             else if (isNaN(value))
-                console.log(value);
+                console.log("Outra coisa", value);
             else
-                this.pushOperation("Outra coisa", value);
+                this.pushOperation(value);
         else
             if (this.isOperator(value))
                 this.pushOperation(value);
